@@ -1,0 +1,6 @@
+---
+
+
+- include: tds_fdw.yml
+  tags:
+    - tds_fdw

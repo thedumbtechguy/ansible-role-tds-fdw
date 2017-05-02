@@ -1,0 +1,30 @@
+---
+
+- name: create temporary build directory
+  file:
+    path: '/tmp/ansible.thedumbtechguy.tdsfdw'
+    state: directory
+    mode: 0700
+
+- name: download and untar package
+  unarchive:
+    src: 'https://github.com/tds-fdw/tds_fdw/archive/v1.0.8.tar.gz'
+    dest: '/tmp/ansible.thedumbtechguy.tdsfdw'
+    remote_src: True
+
+- name: run make
+  command: make USE_PGXS=1
+  args:
+    chdir: '/tmp/ansible.thedumbtechguy.tdsfdw/tds_fdw-1.0.8'
+    creates: ansible.make
+
+- file:
+    path: '/tmp/ansible.thedumbtechguy.tdsfdw/tds_fdw-1.0.8/ansible.make'
+    state: touch
+  changed_when: false
+
+- name: run make install
+  command: make USE_PGXS=1 install
+  args:
+    chdir: '/tmp/ansible.thedumbtechguy.tdsfdw/tds_fdw-1.0.8'
+  become: true
